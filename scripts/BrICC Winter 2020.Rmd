@@ -1,0 +1,71 @@
+---
+title: "BrICC Student Data Winter 2020"
+author: "Jim Wright"
+date: "1/6/2020"
+output: html_document
+toc: true
+toc_float: true
+theme: united 
+highlight: zenburn 
+---
+
+```{r setup, include=FALSE}
+library(rio)
+library(here)
+library(tidyverse)
+library(datapasta)
+library(papaja)
+library(knitr)
+library(kableExtra)
+library(ggrepel)
+theme_set(theme_minimal())
+opts_chunk$set(echo = FALSE,
+               fig.width = 6.5,
+               fig.height = 8)
+```
+
+```{r load-data, include=FALSE}
+bricc <- import(here("data", "bricc_data_new.sav"),
+               setclass = "tbl_df") %>% 
+  characterize() %>% 
+  janitor::clean_names() 
+
+head(bricc)
+```
+
+# Pre-Test Scores
+```{r pre-test total}
+
+bricc_pre_test <- bricc %>% 
+  select(student_name, pre_test_total_score, pre_test_knowledge_score, pre_test_application_score)
+
+knitr::kable(bricc_pre_test,
+             caption = "Pre-Test Score") %>% 
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"))
+
+ggplot(bricc_pre_test) +
+  geom_col(aes(student_name, pre_test_total_score), fill = "cornflowerblue") +
+  theme(axis.text.x = element_text(angle = 45)) +
+   theme(plot.title = element_text(color = "black", size = 12, face = "bold", hjust = 0.5)) +
+  labs(x = "Student Name",
+       y = "Total Score out of 10",
+       title = "Pre-Test Total Score")
+
+ggplot(bricc_pre_test) +
+  geom_col(aes(student_name, pre_test_knowledge_score), fill = "cornflowerblue") +
+  theme(axis.text.x = element_text(angle = 45)) +
+   theme(plot.title = element_text(color = "black", size = 12, face = "bold", hjust = 0.5)) +
+  labs(x = "Student Name",
+       y = "Total Score out of 5",
+       title = "Pre-Test Knowledge Score")
+
+ggplot(bricc_pre_test) +
+  geom_col(aes(student_name, pre_test_application_score), fill = "cornflowerblue") +
+  theme(axis.text.x = element_text(angle = 45)) +
+   theme(plot.title = element_text(color = "black", size = 12, face = "bold", hjust = 0.5)) +
+  labs(x = "Student Name",
+       y = "Total Score out of 5",
+       title = "Pre-Test Application Score")
+
+```
+

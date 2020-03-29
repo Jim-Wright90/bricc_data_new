@@ -1,0 +1,1186 @@
+---
+title: "BrICC Student Data"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    social: menu
+    source_code: embed
+    vertical_layout: scroll
+    theme: cerulean
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(tidyverse)
+library(rio)
+library(here)
+library(colorblindr)
+library(gghighlight)
+library(forcats)
+library(ggrepel)
+library(gt)
+library(knitr)
+library(kableExtra)
+library(reactable)
+library(plotly)
+
+opts_chunk$set(echo = FALSE,
+               fig.width = 5,
+               fig.height = 6)
+
+theme_set(theme_minimal(base_size = 8))
+
+bricc <- import(here("data", "bricc_data_new.sav"),
+               setclass = "tbl_df") %>% 
+  characterize() %>% 
+  janitor::clean_names() 
+
+head(bricc)
+```
+
+# Winter 2020
+
+Column {.tabset data-width=650}
+-----------------------------------------------------------------------
+
+### Quiz Score Table 
+```{r total score winter 2020 data cleaning, include=FALSE}
+
+winter_2020 <- bricc %>% 
+  filter(term == 2)
+
+winter_2020_score_table <- winter_2020 %>% 
+  select(student_name, 
+         pre_test_total_score, 
+         post_test_total_score, 
+         pre_test_knowledge_score, 
+         post_test_knowledge_score, 
+         pre_test_application_score, 
+         post_test_application_score) %>% 
+  rename("Student Name" = student_name,
+         "Pre-Test Total Score" = pre_test_total_score,
+         "Post-Test Total Score" = post_test_total_score,
+         "Pre-Test Knowledge Score" = pre_test_knowledge_score,
+         "Post-Test Knowledge Score" = post_test_knowledge_score,
+         "Pre-Test Application Score" = pre_test_application_score,
+         "Post-Test Application Score" = post_test_application_score)
+
+winter_2020_tidy_quiz <- winter_2020 %>% 
+  pivot_longer(
+    cols = c(pre_test_total_score,
+             post_test_total_score,
+             pre_test_knowledge_score,
+             post_test_knowledge_score,
+             pre_test_application_score,
+             post_test_application_score),
+    names_to = "assessment",
+    values_to = "score"
+  )
+
+```
+
+```{r total score winter 2020}
+
+reactable(winter_2020_score_table)
+```
+
+### Quiz Score Plot 
+```{r quiz winter 2020 plot data cleaning, include=FALSE}
+
+
+winter_2020_tidy_quiz$assessment <- factor(winter_2020_tidy_quiz$assessment, 
+                                     levels = c("post_test_total_score",
+                                                "pre_test_total_score",
+                                                "post_test_knowledge_score",
+                                                "pre_test_knowledge_score",
+                                                "post_test_application_score",
+                                                "pre_test_application_score"))
+
+```
+
+```{r quiz plot winter 2020, fig.width=7, fig.height=6.5}
+ggplot(winter_2020_tidy_quiz, aes(assessment, score)) +
+  geom_col(fill = "blue", 
+           alpha = 0.7) +
+  coord_flip() +
+  geom_text(aes(assessment, score, label = score),
+            nudge_y = -0.5,
+            color = "white") +
+  facet_wrap(~student_name) +
+  theme(panel.grid.major.y = element_blank(),
+        panel.grid.minor.x = element_blank(),
+        panel.grid.major.x = element_line(color = "gray80")) +
+  theme(axis.text.x = element_text(angle = 90)) +
+  theme(plot.title = element_text(color = "black", size = 12, face = "bold", hjust = 0.5),
+        axis.text = element_text(size = 10),
+        axis.title=element_text(size=10),
+        strip.text = element_text(size = 10)) +
+  labs(x = "",
+       y = "Score",
+       title = "BrICC Winter 2020 Student Scores") 
+```
+
+### Survey Question 1
+
+I am confident in my ability to conduct a consultation for the BrICC clinic
+
+```{r survey question 1 winter 2020 data cleaning, include=FALSE}
+
+winter_2020_pre_post_q1 <- winter_2020 %>% 
+  select(student_name, pre_survey_q1, post_survey_q1) %>% 
+  rename("Student Name" = student_name,
+         "Pre-Survey Response" = pre_survey_q1,
+         "Post-Survey Response" = post_survey_q1)
+
+```
+
+```{r question 1 winter 2020}
+
+reactable(winter_2020_pre_post_q1)
+```
+
+### Survey Question 2
+
+I am confident in my ability to administer standardized cognitive tests
+
+```{r survey question 2 winter 2020 data cleaning, include=FALSE}
+
+winter_2020_pre_post_q2 <- winter_2020 %>% 
+  select(student_name, pre_survey_q2, post_survey_q2) %>% 
+  rename("Student Name" = student_name,
+         "Pre-Survey Response" = pre_survey_q2,
+         "Post-Survey Response" = post_survey_q2)
+
+```
+
+```{r question 2 winter 2020}
+
+reactable(winter_2020_pre_post_q2)
+```
+
+
+### Survey Question 3
+
+I am confident in my ability to conduct a client-centered clinical interview
+
+```{r survey question 3 winter 2020 data cleaning, include=FALSE}
+
+winter_2020_pre_post_q3 <- winter_2020 %>% 
+  select(student_name, pre_survey_q3, post_survey_q3) %>% 
+  rename("Student Name" = student_name,
+         "Pre-Survey Response" = pre_survey_q3,
+         "Post-Survey Response" = post_survey_q3)
+
+```
+
+```{r question 3 winter 2020}
+
+reactable(winter_2020_pre_post_q3)
+```
+
+### Survey Question 4
+
+I am confident in my ability to identify treatment options to assist people with acquired cognitive impairments
+
+```{r survey question 4 winter 2020 data cleaning, include=FALSE}
+
+winter_2020_pre_post_q4 <- winter_2020 %>% 
+  select(student_name, pre_survey_q4, post_survey_q4) %>% 
+  rename("Student Name" = student_name,
+         "Pre-Survey Response" = pre_survey_q4,
+         "Post-Survey Response" = post_survey_q4)
+
+```
+
+```{r question 4 winter 2020}
+
+reactable(winter_2020_pre_post_q4)
+```
+
+### Survey Question 5
+
+I am prepared to write cognitive rehabilitation goals
+
+```{r survey question 5 winter 2020 data cleaning, include=FALSE}
+
+winter_2020_pre_post_q5 <- winter_2020 %>% 
+  select(student_name, pre_survey_q5, post_survey_q5) %>% 
+  rename("Student Name" = student_name,
+         "Pre-Survey Response" = pre_survey_q5,
+         "Post-Survey Response" = post_survey_q5)
+
+```
+
+```{r question 5 winter 2020}
+
+reactable(winter_2020_pre_post_q5)
+```
+
+### Survey Question 6
+
+I am prepared to administer direct interventions such as attention training or goal management training
+```{r survey question 6 winter 2020 data cleaning, include=FALSE}
+
+winter_2020_pre_post_q6 <- winter_2020 %>% 
+  select(student_name, pre_survey_q6, post_survey_q6) %>% 
+  rename("Student Name" = student_name,
+         "Pre-Survey Response" = pre_survey_q6,
+         "Post-Survey Response" = post_survey_q6)
+
+```
+
+```{r question 6 winter 2020}
+
+reactable(winter_2020_pre_post_q6)
+```
+
+### Survey Question 7
+
+I am prepared to engage in systematic instruction to support the use of external aids
+```{r survey question 7 winter 2020 data cleaning, include=FALSE}
+
+winter_2020_pre_post_q7 <- winter_2020 %>% 
+  select(student_name, pre_survey_q7, post_survey_q7) %>% 
+  rename("Student Name" = student_name,
+         "Pre-Survey Response" = pre_survey_q7,
+         "Post-Survey Response" = post_survey_q7)
+
+```
+
+```{r question 7 winter 2020}
+
+reactable(winter_2020_pre_post_q7)
+```
+
+### Survey Question 8
+
+I am prepared to engage in a needs assessment to identify cognitive strategies and support learning and use of them
+```{r survey question 8 winter 2020 data cleaning, include=FALSE}
+
+winter_2020_pre_post_q8 <- winter_2020 %>% 
+  select(student_name, pre_survey_q8, post_survey_q8) %>% 
+  rename("Student Name" = student_name,
+         "Pre-Survey Response" = pre_survey_q8,
+         "Post-Survey Response" = post_survey_q8)
+
+```
+
+```{r question 8 winter 2020}
+
+reactable(winter_2020_pre_post_q8)
+```
+
+### Survey Question 9
+
+I am confident in my ability to collect and analyze client session data
+```{r survey question 9 winter 2020 data cleaning, include=FALSE}
+
+winter_2020_pre_post_q9 <- winter_2020 %>% 
+  select(student_name, pre_survey_q9, post_survey_q9) %>% 
+  rename("Student Name" = student_name,
+         "Pre-Survey Response" = pre_survey_q9,
+         "Post-Survey Response" = post_survey_q9)
+```
+
+```{r question 9 winter 2020}
+
+reactable(winter_2020_pre_post_q9)
+```
+
+### Survey Question 10
+
+I am prepared to justify my decisions related to assessment and treatment selection
+```{r survey question 10 winter 2020 data cleaning, include=FALSE}
+
+winter_2020_pre_post_q10 <- winter_2020 %>% 
+  select(student_name, pre_survey_q10, post_survey_q10) %>% 
+  rename("Student Name" = student_name,
+         "Pre-Survey Response" = pre_survey_q10,
+         "Post-Survey Response" = post_survey_q10)
+
+```
+
+```{r question 10 winter 2020}
+
+reactable(winter_2020_pre_post_q10)
+```
+
+### Survcey Question 11
+
+I am confident in my ability to apply principles of evidence-based practice to my assessment and treatment decisions
+```{r survey question 11 winter 2020 data cleaning, include=FALSE}
+
+winter_2020_pre_post_q11 <- winter_2020 %>% 
+  select(student_name, pre_survey_q11, post_survey_q11) %>% 
+  rename("Student Name" = student_name,
+         "Pre-Survey Response" = pre_survey_q11,
+         "Post-Survey Response" = post_survey_q11)
+
+```
+
+```{r question 11 winter 2020}
+
+reactable(winter_2020_pre_post_q11)
+```
+
+
+### Survey Question 12
+
+I am confident in my ability to make ‘online’ (in session) changes to my daily plans
+```{r survey question 12 winter 2020 data cleaning, include=FALSE}
+
+winter_2020_pre_post_q12 <- winter_2020 %>% 
+  select(student_name, pre_survey_q12, post_survey_q12) %>% 
+  rename("Student Name" = student_name,
+         "Pre-Survey Response" = pre_survey_q12,
+         "Post-Survey Response" = post_survey_q12)
+
+```
+
+```{r question 12 winter 2020}
+
+reactable(winter_2020_pre_post_q12)
+```
+
+
+### Survey Question 13
+
+I am knowledgeable about concussion management
+```{r survey question 13 winter 2020 data cleaning, include=FALSE}
+
+winter_2020_pre_post_q13 <- winter_2020 %>% 
+  select(student_name, pre_survey_q13, post_survey_q13) %>% 
+  rename("Student Name" = student_name,
+         "Pre-Survey Response" = pre_survey_q13,
+         "Post-Survey Response" = post_survey_q13)
+
+```
+
+```{r question 13 winter 2020}
+
+reactable(winter_2020_pre_post_q13)
+```
+
+### Survey Question 14
+
+I am comfortable working with clients with brain injuries
+```{r survey question 14 winter 2020 data cleaning, include=FALSE}
+
+winter_2020_pre_post_q14 <- winter_2020 %>% 
+  select(student_name, pre_survey_q14, post_survey_q14) %>% 
+  rename("Student Name" = student_name,
+         "Pre-Survey Response" = pre_survey_q14,
+         "Post-Survey Response" = post_survey_q14)
+
+```
+
+```{r question 14 winter 2020}
+
+reactable(winter_2020_pre_post_q14)
+```
+
+### Survey Question 15
+
+I am comfortable working with clients with awareness deficits
+```{r survey question 15 winter 2020 data cleaning, include=FALSE}
+
+winter_2020_pre_post_q15 <- winter_2020 %>% 
+  select(student_name, pre_survey_q15, post_survey_q15) %>% 
+  rename("Student Name" = student_name,
+         "Pre-Survey Response" = pre_survey_q15,
+         "Post-Survey Response" = post_survey_q15)
+
+```
+
+```{r question 15 winter 2020}
+
+reactable(winter_2020_pre_post_q15)
+```
+
+### Survecy Question 16
+
+I am able to use case history information (e.g., information about etiology) to guide my clinical decision making
+```{r survey question 16 winter 2020 data cleaning, include=FALSE}
+
+winter_2020_pre_post_q16 <- winter_2020 %>% 
+  select(student_name, pre_survey_q16, post_survey_q16) %>% 
+  rename("Student Name" = student_name,
+         "Pre-Survey Response" = pre_survey_q16,
+         "Post-Survey Response" = post_survey_q16)
+
+```
+
+```{r question 16 winter 2020}
+
+reactable(winter_2020_pre_post_q16)
+```
+
+### Survey Question 17
+
+I feel prepared to orally present cases
+```{r survey question 17 winter 2020 data cleaning, include=FALSE}
+
+winter_2020_pre_post_q17 <- winter_2020 %>% 
+  select(student_name, pre_survey_q17, post_survey_q17) %>% 
+  rename("Student Name" = student_name,
+         "Pre-Survey Response" = pre_survey_q17,
+         "Post-Survey Response" = post_survey_q17)
+
+```
+
+```{r question 17 winter 2020}
+
+reactable(winter_2020_pre_post_q17)
+```
+
+
+### Survey Question 18
+
+Training was systematic and well organized (Post-Survey Only)
+```{r survey question 18 winter 2020 data cleaning, include=FALSE}
+
+winter_2020_pre_post_q18 <- winter_2020 %>% 
+  select(student_name, post_survey_q18) %>% 
+  rename("Student Name" = student_name,
+         "Post-Survey Response" = post_survey_q18)
+
+```
+
+```{r question 18 winter 2020}
+
+reactable(winter_2020_pre_post_q18)
+```
+
+### Survey Question 19
+
+Group meetings enhanced my learning (Post-Survey Only)
+```{r survey question 19 winter 2020 data cleaning, include=FALSE}
+
+winter_2020_pre_post_q19 <- winter_2020 %>% 
+  select(student_name, post_survey_q19) %>% 
+  rename("Student Name" = student_name,
+         "Post-Survey Response" = post_survey_q19)
+
+```
+
+```{r question 19 winter 2020}
+
+reactable(winter_2020_pre_post_q19)
+```
+
+
+### Survey Question 20
+
+Group meetings were efficient (Post-Survey Only)
+```{r survey question 20 winter 2020 data cleaning, include=FALSE}
+
+winter_2020_pre_post_q20 <- winter_2020 %>% 
+  select(student_name, post_survey_q20) %>% 
+  rename("Student Name" = student_name,
+         "Post-Survey Response" = post_survey_q20)
+
+```
+
+```{r question 20 winter 2020}
+
+reactable(winter_2020_pre_post_q20)
+```
+
+
+### Survey Question 21
+
+Group meetings exposed me to learning about other client profiles and case management techniques (Post-Survey Only)
+```{r survey question 21 winter 2020 data cleaning, include=FALSE}
+
+winter_2020_pre_post_q21 <- winter_2020 %>% 
+  select(student_name, post_survey_q21) %>% 
+  rename("Student Name" = student_name,
+         "Post-Survey Response" = post_survey_q21)
+
+```
+
+```{r question 21 winter 2020}
+
+reactable(winter_2020_pre_post_q21)
+```
+
+
+### Survey Question 22
+
+I learned enough about treatment approaches implemented by my peers to be able to implement them with a client even though I never personally delivered the intervention (Post-Survey Only)
+```{r survey question 22 winter 2020 data cleaning, include=FALSE}
+
+winter_2020_pre_post_q22 <- winter_2020 %>% 
+  select(student_name, post_survey_q22) %>% 
+  rename("Student Name" = student_name,
+         "Post-Survey Response" = post_survey_q22)
+
+```
+
+```{r question 22 winter 2020}
+
+reactable(winter_2020_pre_post_q22)
+```
+
+
+### Survey Question 23
+
+I was exposed to clients with the same disorder/diagnosis with different manifestations or treatment needs (Post-Survey Only)
+```{r survey question 23 winter 2020 data cleaning, include=FALSE}
+
+winter_2020_pre_post_q23 <- winter_2020 %>% 
+  select(student_name, post_survey_q23) %>% 
+  rename("Student Name" = student_name,
+         "Post-Survey Response" = post_survey_q23)
+
+```
+
+```{r question 23 winter 2020}
+
+reactable(winter_2020_pre_post_q23)
+```
+
+### Survey Question 24
+
+My supervisor supported my case management and clinical approach (Post-Survey Only)
+```{r survey question 24 winter 2020 data cleaning, include=FALSE}
+
+winter_2020_pre_post_q24 <- winter_2020 %>% 
+  select(student_name, post_survey_q24) %>% 
+  rename("Student Name" = student_name,
+         "Post-Survey Response" = post_survey_q24)
+
+```
+
+```{r question 24 winter 2020}
+
+reactable(winter_2020_pre_post_q24)
+```
+
+
+### Survey Question 25
+
+(If you have already taken cognitive rehabilitation course) Because of this clinical experience, I am now able to apply theoretical knowledge and principles in a clinically sound matter (Post-Survey Only)
+```{r survey question 25 winter 2020 data cleaning, include=FALSE}
+
+winter_2020_pre_post_q25 <- winter_2020 %>% 
+  select(student_name, post_survey_q25) %>% 
+  rename("Student Name" = student_name,
+         "Post-Survey Response" = post_survey_q25)
+
+```
+
+```{r question 25 winter 2020}
+
+reactable(winter_2020_pre_post_q25)
+```
+
+
+### Survey Question 26
+
+(If you have already taken cognitive rehabilitation course) I had the appropriate knowledge of theories and practice from my coursework to apply to this clinical experience (Post-Survey Only)
+```{r survey question 26 winter 2020 data cleaning, include=FALSE}
+
+winter_2020_pre_post_q26 <- winter_2020 %>% 
+  select(student_name, post_survey_q26) %>% 
+  rename("Student Name" = student_name,
+         "Post-Survey Response" = post_survey_q26)
+
+```
+
+```{r question 26 winter 2020}
+
+reactable(winter_2020_pre_post_q26)
+```
+
+
+### Survey Question 27
+
+(If you have not yet taken cognitive rehabilitation course) I feel more prepared about enrolling in class because of this clinical experience (Post-Survey Only)
+```{r survey question 27 winter 2020 data cleaning, include=FALSE}
+
+winter_2020_pre_post_q27 <- winter_2020 %>% 
+  select(student_name, post_survey_q27) %>% 
+  rename("Student Name" = student_name,
+         "Post-Survey Response" = post_survey_q27)
+
+```
+
+```{r question 27 winter 2020}
+
+reactable(winter_2020_pre_post_q27)
+```
+
+
+# Spring 2020
+
+Column {.tabset data-width=650}
+-----------------------------------------------------------------------
+
+### Quiz Score Table 
+```{r total score spring 2020 data cleaning, include=FALSE}
+
+spring_2020 <- bricc %>% 
+  filter(term == 3)
+
+spring_2020_score_table <- spring_2020 %>% 
+  select(student_name, 
+         pre_test_total_score, 
+         post_test_total_score, 
+         pre_test_knowledge_score, 
+         post_test_knowledge_score, 
+         pre_test_application_score, 
+         post_test_application_score) %>% 
+  rename("Student Name" = student_name,
+         "Pre-Test Total Score" = pre_test_total_score,
+         "Post-Test Total Score" = post_test_total_score,
+         "Pre-Test Knowledge Score" = pre_test_knowledge_score,
+         "Post-Test Knowledge Score" = post_test_knowledge_score,
+         "Pre-Test Application Score" = pre_test_application_score,
+         "Post-Test Application Score" = post_test_application_score)
+
+spring_2020_tidy_quiz <- spring_2020 %>% 
+  pivot_longer(
+    cols = c(pre_test_total_score,
+             post_test_total_score,
+             pre_test_knowledge_score,
+             post_test_knowledge_score,
+             pre_test_application_score,
+             post_test_application_score),
+    names_to = "assessment",
+    values_to = "score"
+  )
+
+```
+
+```{r total score spring 2020}
+
+reactable(spring_2020_score_table)
+```
+
+### Quiz Score Plot 
+```{r quiz spring 2020 plot data cleaning, include=FALSE}
+
+
+spring_2020_tidy_quiz$assessment <- factor(spring_2020_tidy_quiz$assessment, 
+                                     levels = c("post_test_total_score",
+                                                "pre_test_total_score",
+                                                "post_test_knowledge_score",
+                                                "pre_test_knowledge_score",
+                                                "post_test_application_score",
+                                                "pre_test_application_score"))
+
+```
+
+```{r quiz plot spring 2020, fig.width=7, fig.height=6.5}
+ggplot(spring_2020_tidy_quiz, aes(assessment, score)) +
+  geom_col(fill = "blue", 
+           alpha = 0.7) +
+  coord_flip() +
+  geom_text(aes(assessment, score, label = score),
+            nudge_y = -0.5,
+            color = "white") +
+  facet_wrap(~student_name) +
+  theme(panel.grid.major.y = element_blank(),
+        panel.grid.minor.x = element_blank(),
+        panel.grid.major.x = element_line(color = "gray80")) +
+  theme(axis.text.x = element_text(angle = 90)) +
+  theme(plot.title = element_text(color = "black", size = 12, face = "bold", hjust = 0.5),
+        axis.text = element_text(size = 10),
+        axis.title=element_text(size=10),
+        strip.text = element_text(size = 10)) +
+  labs(x = "",
+       y = "Score",
+       title = "BrICC Spring 2020 Student Scores") 
+```
+
+### Survey Question 1
+
+I am confident in my ability to conduct a consultation for the BrICC clinic
+
+```{r survey question 1 spring 2020 data cleaning, include=FALSE}
+
+spring_2020_pre_post_q1 <- spring_2020 %>% 
+  select(student_name, pre_survey_q1, post_survey_q1) %>% 
+  rename("Student Name" = student_name,
+         "Pre-Survey Response" = pre_survey_q1,
+         "Post-Survey Response" = post_survey_q1)
+
+```
+
+```{r question 1 spring 2020}
+
+reactable(spring_2020_pre_post_q1)
+```
+
+### Survey Question 2
+
+I am confident in my ability to administer standardized cognitive tests
+
+```{r survey question 2 spring 2020 data cleaning, include=FALSE}
+
+spring_2020_pre_post_q2 <- spring_2020 %>% 
+  select(student_name, pre_survey_q2, post_survey_q2) %>% 
+  rename("Student Name" = student_name,
+         "Pre-Survey Response" = pre_survey_q2,
+         "Post-Survey Response" = post_survey_q2)
+
+```
+
+```{r question 2 spring 2020}
+
+reactable(spring_2020_pre_post_q2)
+```
+
+
+### Survey Question 3
+
+I am confident in my ability to conduct a client-centered clinical interview
+
+```{r survey question 3 spring 2020 data cleaning, include=FALSE}
+
+spring_2020_pre_post_q3 <- spring_2020 %>% 
+  select(student_name, pre_survey_q3, post_survey_q3) %>% 
+  rename("Student Name" = student_name,
+         "Pre-Survey Response" = pre_survey_q3,
+         "Post-Survey Response" = post_survey_q3)
+
+```
+
+```{r question 3 spring 2020}
+
+reactable(spring_2020_pre_post_q3)
+```
+
+### Survey Question 4
+
+I am confident in my ability to identify treatment options to assist people with acquired cognitive impairments
+
+```{r survey question 4 spring 2020 data cleaning, include=FALSE}
+
+spring_2020_pre_post_q4 <- spring_2020 %>% 
+  select(student_name, pre_survey_q4, post_survey_q4) %>% 
+  rename("Student Name" = student_name,
+         "Pre-Survey Response" = pre_survey_q4,
+         "Post-Survey Response" = post_survey_q4)
+
+```
+
+```{r question 4 spring 2020}
+
+reactable(spring_2020_pre_post_q4)
+```
+
+### Survey Question 5
+
+I am prepared to write cognitive rehabilitation goals
+
+```{r survey question 5 spring 2020 data cleaning, include=FALSE}
+
+spring_2020_pre_post_q5 <- spring_2020 %>% 
+  select(student_name, pre_survey_q5, post_survey_q5) %>% 
+  rename("Student Name" = student_name,
+         "Pre-Survey Response" = pre_survey_q5,
+         "Post-Survey Response" = post_survey_q5)
+
+```
+
+```{r question 5 spring 2020}
+
+reactable(spring_2020_pre_post_q5)
+```
+
+### Survey Question 6
+
+I am prepared to administer direct interventions such as attention training or goal management training
+```{r survey question 6 spring 2020 data cleaning, include=FALSE}
+
+spring_2020_pre_post_q6 <- spring_2020 %>% 
+  select(student_name, pre_survey_q6, post_survey_q6) %>% 
+  rename("Student Name" = student_name,
+         "Pre-Survey Response" = pre_survey_q6,
+         "Post-Survey Response" = post_survey_q6)
+
+```
+
+```{r question 6 spring 2020}
+
+reactable(spring_2020_pre_post_q6)
+```
+
+### Survey Question 7
+
+I am prepared to engage in systematic instruction to support the use of external aids
+```{r survey question 7 spring 2020 data cleaning, include=FALSE}
+
+spring_2020_pre_post_q7 <- spring_2020 %>% 
+  select(student_name, pre_survey_q7, post_survey_q7) %>% 
+  rename("Student Name" = student_name,
+         "Pre-Survey Response" = pre_survey_q7,
+         "Post-Survey Response" = post_survey_q7)
+
+```
+
+```{r question 7 spring 2020}
+
+reactable(spring_2020_pre_post_q7)
+```
+
+### Survey Question 8
+
+I am prepared to engage in a needs assessment to identify cognitive strategies and support learning and use of them
+```{r survey question 8 spring 2020 data cleaning, include=FALSE}
+
+spring_2020_pre_post_q8 <- spring_2020 %>% 
+  select(student_name, pre_survey_q8, post_survey_q8) %>% 
+  rename("Student Name" = student_name,
+         "Pre-Survey Response" = pre_survey_q8,
+         "Post-Survey Response" = post_survey_q8)
+
+```
+
+```{r question 8 spring 2020}
+
+reactable(spring_2020_pre_post_q8)
+```
+
+### Survey Question 9
+
+I am confident in my ability to collect and analyze client session data
+```{r survey question 9 spring 2020 data cleaning, include=FALSE}
+
+spring_2020_pre_post_q9 <- spring_2020 %>% 
+  select(student_name, pre_survey_q9, post_survey_q9) %>% 
+  rename("Student Name" = student_name,
+         "Pre-Survey Response" = pre_survey_q9,
+         "Post-Survey Response" = post_survey_q9)
+```
+
+```{r question 9 spring 2020}
+
+reactable(spring_2020_pre_post_q9)
+```
+
+### Survey Question 10
+
+I am prepared to justify my decisions related to assessment and treatment selection
+```{r survey question 10 spring 2020 data cleaning, include=FALSE}
+
+spring_2020_pre_post_q10 <- spring_2020 %>% 
+  select(student_name, pre_survey_q10, post_survey_q10) %>% 
+  rename("Student Name" = student_name,
+         "Pre-Survey Response" = pre_survey_q10,
+         "Post-Survey Response" = post_survey_q10)
+
+```
+
+```{r question 10 spring 2020}
+
+reactable(spring_2020_pre_post_q10)
+```
+
+### Survcey Question 11
+
+I am confident in my ability to apply principles of evidence-based practice to my assessment and treatment decisions
+```{r survey question 11 spring 2020 data cleaning, include=FALSE}
+
+spring_2020_pre_post_q11 <- spring_2020 %>% 
+  select(student_name, pre_survey_q11, post_survey_q11) %>% 
+  rename("Student Name" = student_name,
+         "Pre-Survey Response" = pre_survey_q11,
+         "Post-Survey Response" = post_survey_q11)
+
+```
+
+```{r question 11 spring 2020}
+
+reactable(spring_2020_pre_post_q11)
+```
+
+
+### Survey Question 12
+
+I am confident in my ability to make ‘online’ (in session) changes to my daily plans
+```{r survey question 12 spring 2020 data cleaning, include=FALSE}
+
+spring_2020_pre_post_q12 <- spring_2020 %>% 
+  select(student_name, pre_survey_q12, post_survey_q12) %>% 
+  rename("Student Name" = student_name,
+         "Pre-Survey Response" = pre_survey_q12,
+         "Post-Survey Response" = post_survey_q12)
+
+```
+
+```{r question 12 spring 2020}
+
+reactable(spring_2020_pre_post_q12)
+```
+
+
+### Survey Question 13
+
+I am knowledgeable about concussion management
+```{r survey question 13 spring 2020 data cleaning, include=FALSE}
+
+spring_2020_pre_post_q13 <- spring_2020 %>% 
+  select(student_name, pre_survey_q13, post_survey_q13) %>% 
+  rename("Student Name" = student_name,
+         "Pre-Survey Response" = pre_survey_q13,
+         "Post-Survey Response" = post_survey_q13)
+
+```
+
+```{r question 13 spring 2020}
+
+reactable(spring_2020_pre_post_q13)
+```
+
+### Survey Question 14
+
+I am comfortable working with clients with brain injuries
+```{r survey question 14 spring 2020 data cleaning, include=FALSE}
+
+spring_2020_pre_post_q14 <- spring_2020 %>% 
+  select(student_name, pre_survey_q14, post_survey_q14) %>% 
+  rename("Student Name" = student_name,
+         "Pre-Survey Response" = pre_survey_q14,
+         "Post-Survey Response" = post_survey_q14)
+
+```
+
+```{r question 14 spring 2020}
+
+reactable(spring_2020_pre_post_q14)
+```
+
+### Survey Question 15
+
+I am comfortable working with clients with awareness deficits
+```{r survey question 15 spring 2020 data cleaning, include=FALSE}
+
+spring_2020_pre_post_q15 <- spring_2020 %>% 
+  select(student_name, pre_survey_q15, post_survey_q15) %>% 
+  rename("Student Name" = student_name,
+         "Pre-Survey Response" = pre_survey_q15,
+         "Post-Survey Response" = post_survey_q15)
+
+```
+
+```{r question 15 spring 2020}
+
+reactable(spring_2020_pre_post_q15)
+```
+
+### Survecy Question 16
+
+I am able to use case history information (e.g., information about etiology) to guide my clinical decision making
+```{r survey question 16 spring 2020 data cleaning, include=FALSE}
+
+spring_2020_pre_post_q16 <- spring_2020 %>% 
+  select(student_name, pre_survey_q16, post_survey_q16) %>% 
+  rename("Student Name" = student_name,
+         "Pre-Survey Response" = pre_survey_q16,
+         "Post-Survey Response" = post_survey_q16)
+
+```
+
+```{r question 16 spring 2020}
+
+reactable(spring_2020_pre_post_q16)
+```
+
+### Survey Question 17
+
+I feel prepared to orally present cases
+```{r survey question 17 spring 2020 data cleaning, include=FALSE}
+
+spring_2020_pre_post_q17 <- spring_2020 %>% 
+  select(student_name, pre_survey_q17, post_survey_q17) %>% 
+  rename("Student Name" = student_name,
+         "Pre-Survey Response" = pre_survey_q17,
+         "Post-Survey Response" = post_survey_q17)
+
+```
+
+```{r question 17 spring 2020}
+
+reactable(spring_2020_pre_post_q17)
+```
+
+
+### Survey Question 18
+
+Training was systematic and well organized (Post-Survey Only)
+```{r survey question 18 spring 2020 data cleaning, include=FALSE}
+
+spring_2020_pre_post_q18 <- spring_2020 %>% 
+  select(student_name, post_survey_q18) %>% 
+  rename("Student Name" = student_name,
+         "Post-Survey Response" = post_survey_q18)
+
+```
+
+```{r question 18 spring 2020}
+
+reactable(spring_2020_pre_post_q18)
+```
+
+### Survey Question 19
+
+Group meetings enhanced my learning (Post-Survey Only)
+```{r survey question 19 spring 2020 data cleaning, include=FALSE}
+
+spring_2020_pre_post_q19 <- spring_2020 %>% 
+  select(student_name, post_survey_q19) %>% 
+  rename("Student Name" = student_name,
+         "Post-Survey Response" = post_survey_q19)
+
+```
+
+```{r question 19 spring 2020}
+
+reactable(spring_2020_pre_post_q19)
+```
+
+
+### Survey Question 20
+
+Group meetings were efficient (Post-Survey Only)
+```{r survey question 20 spring 2020 data cleaning, include=FALSE}
+
+spring_2020_pre_post_q20 <- spring_2020 %>% 
+  select(student_name, post_survey_q20) %>% 
+  rename("Student Name" = student_name,
+         "Post-Survey Response" = post_survey_q20)
+
+```
+
+```{r question 20 spring 2020}
+
+reactable(spring_2020_pre_post_q20)
+```
+
+
+### Survey Question 21
+
+Group meetings exposed me to learning about other client profiles and case management techniques (Post-Survey Only)
+```{r survey question 21 spring 2020 data cleaning, include=FALSE}
+
+spring_2020_pre_post_q21 <- spring_2020 %>% 
+  select(student_name, post_survey_q21) %>% 
+  rename("Student Name" = student_name,
+         "Post-Survey Response" = post_survey_q21)
+
+```
+
+```{r question 21 spring 2020}
+
+reactable(spring_2020_pre_post_q21)
+```
+
+
+### Survey Question 22
+
+I learned enough about treatment approaches implemented by my peers to be able to implement them with a client even though I never personally delivered the intervention (Post-Survey Only)
+```{r survey question 22 spring 2020 data cleaning, include=FALSE}
+
+spring_2020_pre_post_q22 <- spring_2020 %>% 
+  select(student_name, post_survey_q22) %>% 
+  rename("Student Name" = student_name,
+         "Post-Survey Response" = post_survey_q22)
+
+```
+
+```{r question 22 spring 2020}
+
+reactable(spring_2020_pre_post_q22)
+```
+
+
+### Survey Question 23
+
+I was exposed to clients with the same disorder/diagnosis with different manifestations or treatment needs (Post-Survey Only)
+```{r survey question 23 spring 2020 data cleaning, include=FALSE}
+
+spring_2020_pre_post_q23 <- spring_2020 %>% 
+  select(student_name, post_survey_q23) %>% 
+  rename("Student Name" = student_name,
+         "Post-Survey Response" = post_survey_q23)
+
+```
+
+```{r question 23 spring 2020}
+
+reactable(spring_2020_pre_post_q23)
+```
+
+### Survey Question 24
+
+My supervisor supported my case management and clinical approach (Post-Survey Only)
+```{r survey question 24 spring 2020 data cleaning, include=FALSE}
+
+spring_2020_pre_post_q24 <- spring_2020 %>% 
+  select(student_name, post_survey_q24) %>% 
+  rename("Student Name" = student_name,
+         "Post-Survey Response" = post_survey_q24)
+
+```
+
+```{r question 24 spring 2020}
+
+reactable(spring_2020_pre_post_q24)
+```
+
+
+### Survey Question 25
+
+(If you have already taken cognitive rehabilitation course) Because of this clinical experience, I am now able to apply theoretical knowledge and principles in a clinically sound matter (Post-Survey Only)
+```{r survey question 25 spring 2020 data cleaning, include=FALSE}
+
+spring_2020_pre_post_q25 <- spring_2020 %>% 
+  select(student_name, post_survey_q25) %>% 
+  rename("Student Name" = student_name,
+         "Post-Survey Response" = post_survey_q25)
+
+```
+
+```{r question 25 spring 2020}
+
+reactable(spring_2020_pre_post_q25)
+```
+
+
+### Survey Question 26
+
+(If you have already taken cognitive rehabilitation course) I had the appropriate knowledge of theories and practice from my coursework to apply to this clinical experience (Post-Survey Only)
+```{r survey question 26 spring 2020 data cleaning, include=FALSE}
+
+spring_2020_pre_post_q26 <- spring_2020 %>% 
+  select(student_name, post_survey_q26) %>% 
+  rename("Student Name" = student_name,
+         "Post-Survey Response" = post_survey_q26)
+
+```
+
+```{r question 26 spring 2020}
+
+reactable(spring_2020_pre_post_q26)
+```
+
+
+### Survey Question 27
+
+(If you have not yet taken cognitive rehabilitation course) I feel more prepared about enrolling in class because of this clinical experience (Post-Survey Only)
+```{r survey question 27 spring 2020 data cleaning, include=FALSE}
+
+spring_2020_pre_post_q27 <- spring_2020 %>% 
+  select(student_name, post_survey_q27) %>% 
+  rename("Student Name" = student_name,
+         "Post-Survey Response" = post_survey_q27)
+
+```
+
+```{r question 27 spring 2020}
+
+reactable(spring_2020_pre_post_q27)
+```
