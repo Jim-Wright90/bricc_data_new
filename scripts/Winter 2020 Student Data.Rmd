@@ -63,17 +63,26 @@ score_table <- bricc %>%
          "Pre-Test Application Score" = pre_test_application_score,
          "Post-Test Application Score" = post_test_application_score)
 
+bricc <- bricc %>% 
+  rename("Pre-Test Total Score" = pre_test_total_score,
+         "Post-Test Total Score" = post_test_total_score,
+         "Pre-Test Knowledge Score" = pre_test_knowledge_score,
+         "Post-Test Knowledge Score" = post_test_knowledge_score,
+         "Pre-Test Application Score" = pre_test_application_score,
+         "Post-Test Application Score" = post_test_application_score)
+
 bricc_tidy_quiz <- bricc %>% 
   pivot_longer(
-    cols = c(pre_test_total_score,
-             post_test_total_score,
-             pre_test_knowledge_score,
-             post_test_knowledge_score,
-             pre_test_application_score,
-             post_test_application_score),
+    cols = c(`Pre-Test Total Score`,
+             `Post-Test Total Score`,
+             `Pre-Test Knowledge Score`,
+             `Post-Test Knowledge Score`,
+             `Pre-Test Application Score`,
+             `Post-Test Application Score`),
     names_to = "assessment",
     values_to = "score"
   )
+
 
 ```
 
@@ -86,12 +95,12 @@ reactable(score_table)
 ```{r quiz plot data cleaning, include=FALSE}
 
 bricc_tidy_quiz$assessment <- factor(bricc_tidy_quiz$assessment, 
-                                     levels = c("pre_test_total_score",
-                                                "post_test_total_score",
-                                                "pre_test_knowledge_score",
-                                                "post_test_knowledge_score",
-                                                "pre_test_application_score",
-                                                "post_test_application_score"))
+                                     levels = c("Pre-Test Total Score",
+                                                "Post-Test Total Score",
+                                                "Pre-Test Knowledge Score",
+                                                "Post-Test Knowledge Score",
+                                                "Pre-Test Application Score",
+                                                "Post-Test Application Score"))
 
 ```
 

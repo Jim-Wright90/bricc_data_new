@@ -65,14 +65,22 @@ winter_2020_score_table <- winter_2020 %>%
          "Pre-Test Application Score" = pre_test_application_score,
          "Post-Test Application Score" = post_test_application_score)
 
+winter_2020 <- winter_2020 %>% 
+  rename("Pre-Test Total Score" = pre_test_total_score,
+         "Post-Test Total Score" = post_test_total_score,
+         "Pre-Test Knowledge Score" = pre_test_knowledge_score,
+         "Post-Test Knowledge Score" = post_test_knowledge_score,
+         "Pre-Test Application Score" = pre_test_application_score,
+         "Post-Test Application Score" = post_test_application_score)
+
 winter_2020_tidy_quiz <- winter_2020 %>% 
   pivot_longer(
-    cols = c(pre_test_total_score,
-             post_test_total_score,
-             pre_test_knowledge_score,
-             post_test_knowledge_score,
-             pre_test_application_score,
-             post_test_application_score),
+    cols = c(`Pre-Test Total Score`,
+             `Post-Test Total Score`,
+             `Pre-Test Knowledge Score`,
+             `Post-Test Knowledge Score`,
+             `Pre-Test Application Score`,
+             `Post-Test Application Score`),
     names_to = "assessment",
     values_to = "score"
   )
@@ -89,12 +97,12 @@ reactable(winter_2020_score_table)
 
 
 winter_2020_tidy_quiz$assessment <- factor(winter_2020_tidy_quiz$assessment, 
-                                     levels = c("post_test_total_score",
-                                                "pre_test_total_score",
-                                                "post_test_knowledge_score",
-                                                "pre_test_knowledge_score",
-                                                "post_test_application_score",
-                                                "pre_test_application_score"))
+                                     levels = c("Post-Test Total Score",
+                                                "Pre-Test Total Score",
+                                                "Post-Test Knowledge Score",
+                                                "Pre-Test Knowledge Score",
+                                                "Post-Test Application Score",
+                                                "Pre-Test Application Score"))
 
 ```
 
@@ -639,14 +647,23 @@ spring_2020_score_table <- spring_2020 %>%
          "Pre-Test Application Score" = pre_test_application_score,
          "Post-Test Application Score" = post_test_application_score)
 
+spring_2020 <- spring_2020 %>% 
+  rename("Pre-Test Total Score" = pre_test_total_score,
+         "Post-Test Total Score" = post_test_total_score,
+         "Pre-Test Knowledge Score" = pre_test_knowledge_score,
+         "Post-Test Knowledge Score" = post_test_knowledge_score,
+         "Pre-Test Application Score" = pre_test_application_score,
+         "Post-Test Application Score" = post_test_application_score)
+
+
 spring_2020_tidy_quiz <- spring_2020 %>% 
   pivot_longer(
-    cols = c(pre_test_total_score,
-             post_test_total_score,
-             pre_test_knowledge_score,
-             post_test_knowledge_score,
-             pre_test_application_score,
-             post_test_application_score),
+    cols = c(`Pre-Test Total Score`,
+             `Post-Test Total Score`,
+             `Pre-Test Knowledge Score`,
+             `Post-Test Knowledge Score`,
+             `Pre-Test Application Score`,
+             `Post-Test Application Score`),
     names_to = "assessment",
     values_to = "score"
   )
@@ -663,12 +680,12 @@ reactable(spring_2020_score_table)
 
 
 spring_2020_tidy_quiz$assessment <- factor(spring_2020_tidy_quiz$assessment, 
-                                     levels = c("post_test_total_score",
-                                                "pre_test_total_score",
-                                                "post_test_knowledge_score",
-                                                "pre_test_knowledge_score",
-                                                "post_test_application_score",
-                                                "pre_test_application_score"))
+                                     levels = c("Post-Test Total Score",
+                                                "Pre-Test Total Score",
+                                                "Post-Test Knowledge Score",
+                                                "Pre-Test Knowledge Score",
+                                                "Post-Test Application Score",
+                                                "Pre-Test Application Score"))
 
 ```
 
